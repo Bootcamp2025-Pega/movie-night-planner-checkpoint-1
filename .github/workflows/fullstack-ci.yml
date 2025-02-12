@@ -1,0 +1,53 @@
+name: Full-Stack CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test Movie Night Planner Application
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repository
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Node.js
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts/*'
+          cache: 'npm' # Caches node_modules for faster installs
+
+      # Step 3: Install dependencies for frontend
+      - name: Install Frontend Dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      # Step 4: Build the frontend
+      - name: Build Frontend
+        run: |
+          cd frontend
+          npm run build
+
+      # Step 5: Install dependencies for backend
+      - name: Install Backend Dependencies
+        run: |
+          cd backend
+          npm ci
+
+      # Step 6: Run backend tests
+      - name: Run Backend Tests
+        run: |
+          cd backend
+          npm test
+
+      # Step 7: Run frontend tests
+      - name: Run Frontend Tests
+        run: |
+          cd frontend
+          npm test
